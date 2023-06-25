@@ -3,18 +3,20 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 
 @app.route('/send_email', methods=['POST'])
 def send_email():
-    print("request", request)
-    data = request.get_json()
-    print(data)
+    
+    message = request.get_json()
+    
     sender_email = 'amirry002@gmail.com'
     receiver_email = 'sohailbadghisi1@gmail.com'
     subject = "New user registered"
-    message = data['message']
+    
     password = 'uxyikxxuikdjcjdn'
     
     try:
@@ -27,8 +29,8 @@ def send_email():
         email['From'] = sender_email
         email['To'] = receiver_email
         email['Subject'] = subject
-        message_json = json.dumps(message)
-        email.attach(MIMEText(message_json, 'plain'))
+        # message_json = json.dumps(message)
+        email.attach(MIMEText(message, 'plain'))
 
         # Connect to the SMTP server
         with smtplib.SMTP(smtp_server, smtp_port) as server:
